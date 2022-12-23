@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Map - Display a map</title>
+  <style type="text/css">
+    html,body{margin:0px;height:100%;width:100%}
+    .container{width:100%;height:100%}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/maptalks/dist/maptalks.css">
+  <script type="text/javascript" src="https://unpkg.com/maptalks/dist/maptalks.min.js"></script>
+  <body>
+
+    <div id="map" class="container"></div>
+
+    <script>
+
+      const data = [
+                    { label: 'МТС 2g', url: 'https://tiles.qsupport.mts.ru/g2_New/{z}/{x}/{y}.png'},
+                    { label: 'МТС 3g', url: 'https://tiles.qsupport.mts.ru/g3_New/{z}/{x}/{y}.png'},
+                    { label: 'МТС 4g', url: 'https://tiles.qsupport.mts.ru/lte_New/{z}/{x}/{y}.png'},
+                    { label: 'МТС LTE', url: 'https://tiles.qsupport.mts.ru/lte_New/{z}/{x}/{y}.png'},
+                    { label: 'Мегафон 2g', url: 'https://coverage-map.megafon.ru/2g/{z}/{x}/{y}.png'},
+                    { label: 'Мегафон 3g', url: 'https://coverage-map.megafon.ru/3g/{z}/{x}/{y}.png'},
+                    { label: 'Мегафон 4g', url: 'https://coverage-map.megafon.ru/lte/{z}/{x}/{y}.png'},
+                    { label: 'ТЕЛЕ2 2g', url: 'https://smolensk.tele2.ru/maps/_2g/{z}/{x}/{y}.png'},
+                    { label: 'ТЕЛЕ2 3g', url: 'https://smolensk.tele2.ru/maps/_3g/{z}/{x}/{y}.png'},
+                    { label: 'ТЕЛЕ2 4g', url: 'https://smolensk.tele2.ru/maps/_4g/{z}/{x}/{y}.png'},
+                    { label: 'Ростелеком 2g', url: 'https://rt-static-cdn.rt.ru/maps/2g/{z}/{x}/{y}.png'},
+                    { label: 'Ростелеком 3g', url: 'https://rt-static-cdn.rt.ru/maps/3g/{z}/{x}/{y}.png'},
+                    { label: 'Ростелеком 4g', url: 'https://rt-static-cdn.rt.ru/maps/4g/{z}/{x}/{y}.png'},
+                    { label: 'Билайн 2g', url: 'https://static.beeline.ru/upload/tiles/2G/current/{z}/{x}/{y}.png'},
+                    { label: 'Билайн 3g', url: 'https://static.beeline.ru/upload/tiles/3G/current/{z}/{x}/{y}.png'},
+                    { label: 'Билайн 4g', url: 'https://static.beeline.ru/upload/tiles/4G/current/{z}/{x}/{y}.png'},
+                    ]  
+
+      var map = new maptalks.Map('map', {
+        center: [65.5,57],
+        zoom: 5,
+        layerSwitcherControl: {
+          'position'  : 'top-right',
+          // title of base layers
+          'baseTitle' : 'Base Layers',
+          // title of layers
+          'overlayTitle' : 'Layers',
+          // layers you don't want to manage with layer switcher
+          'excludeLayers' : [],
+          // css class of container element, maptalks-layer-switcher by default
+          'containerClass' : 'maptalks-layer-switcher'
+        },
+
+        attribution: true,
+        zoomControl : true, // add zoom control
+        scaleControl : true, // add scale control
+        overviewControl : true, // add overview control
+        spatialReference:{
+          projection:'EPSG:3857'
+        },
+        
+
+        baseLayer: new maptalks.TileLayer('base', {
+          
+          urlTemplate: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+          subdomains: ["a","b","c","d"],
+          attribution: '&copy; <a href="http://osm.org">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/">CARTO</a>'
+        }),
+        layers : [
+        //  new maptalks.VectorLayer('v', [new maptalks.Marker([65.5, 57])]),
+        
+        //  new maptalks.TileLayer('2g', {
+        //   urlTemplate: 'https://coverage-map.megafon.ru/2g/{z}/{x}/{y}.png',          
+        //   renderer : 'canvas', // set TileLayer's renderer to canvas
+        //   crossOrigin : 'anonymous',
+        //   'crs': 'EPSG:3857',
+        // }),
+
+        ]
+      });
+      // map.addLayer(new maptalks.TileLayer('megafon 2g',{
+      //   // opacity : 0.6, // TileLayer's opacity, 0-1
+      //   spatialReference:{
+      //       projection:'EPSG:3857'
+      //       // other properties necessary for spatial reference
+      //     },
+      //   urlTemplate: 'https://coverage-map.megafon.ru/2g/{z}/{x}/{y}.png',
+      //   attribution: '&copy; <a href="http://osm.org">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/">CARTO</a>',
+      //   crossOrigin : 'anonymous',
+      // }));
+
+
+      data.map(
+        (item)=>{
+                  map.addLayer(new maptalks.TileLayer(item.label ,{
+                  // opacity : 0.6, // TileLayer's opacity, 0-1
+                  urlTemplate: item.url,
+                  // attribution: '&copy; <a href="http://osm.org">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/">CARTO</a>',
+                  crossOrigin : '*', // anonymous
+                  spatialReference:{projection:'EPSG:3857'},
+                  'visible' : false,
+                }));
+        }
+      )
+      
+
+      map.addLayer(
+        new maptalks.VectorLayer('v', [new maptalks.Marker([65.5, 57])]),
+      );
+
+
+    </script>
+  </body>
+</html>
